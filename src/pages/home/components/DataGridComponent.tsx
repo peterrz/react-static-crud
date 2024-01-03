@@ -18,43 +18,13 @@ import {
   GridRowModel,
 } from '@mui/x-data-grid';
 
-
-
-interface EditToolbarProps {
-  setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
-  setRowModesModel: (
-    newModel: (oldModel: GridRowModesModel) => GridRowModesModel,
-  ) => void;
-}
-
-function EditToolbar(props: EditToolbarProps) {
-  const { setRows, setRowModesModel } = props;
-
-  const handleClick = () => {
-    const id = 1;
-    setRows((oldRows) => [...oldRows, { id, name: '', age: '', isNew: true }]);
-    setRowModesModel((oldModel) => ({
-      ...oldModel,
-      [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
-    }));
-  };
-
-  return (
-    <GridToolbarContainer>
-      <Button color="primary" startIcon={<AddIcon className='bg-blue-400 text-white rounded-full mr-1 ' />} onClick={handleClick}>
-        Add
-      </Button>
-    </GridToolbarContainer>
-  );
-}
-
 interface MyGridProps {
   rows: GridRowsProp;
   rowModesModel: GridRowModesModel;
   handleRowModesModelChange: (newRowModesModel: GridRowModesModel) => void;
   handleRowEditStop: GridEventListener<'rowEditStop'>;
   processRowUpdate: (newRow: GridRowModel) => GridRowModel;
-  setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
+  setRows: () => void;
   setRowModesModel: (
     newModel: (oldModel: GridRowModesModel) => GridRowModesModel,
   ) => void;
@@ -78,7 +48,7 @@ export default function DataGridComponent(props: MyGridProps) {
     handleDeleteClick,
     handleSaveClick,
     handleCancelClick,
-    loading
+    loading,
   } = props;
 
 
@@ -109,7 +79,6 @@ export default function DataGridComponent(props: MyGridProps) {
             <GridActionsCellItem
               icon={<CancelIcon className='text-gray-900' />}
               label="Cancel"
-              className="textPrimary"
               onClick={handleCancelClick(id)}
               color="inherit"
             />,
@@ -120,7 +89,6 @@ export default function DataGridComponent(props: MyGridProps) {
           <GridActionsCellItem
             icon={<EditIcon className='text-blue-800' />}
             label="Edit"
-            className="textPrimary"
             onClick={handleEditClick(id)}
             color="inherit"
           />,
@@ -134,6 +102,20 @@ export default function DataGridComponent(props: MyGridProps) {
       },
     },
   ];
+
+  function EditToolbar() {
+    const handleClick = () => {
+      setRows();
+    };
+
+    return (
+      <GridToolbarContainer>
+        <Button color="primary" startIcon={<AddIcon className='bg-blue-400 text-white rounded-full mr-1 ' />} onClick={handleClick}>
+          Add
+        </Button>
+      </GridToolbarContainer>
+    );
+  }
 
   return (
     <DataGrid
@@ -157,9 +139,6 @@ export default function DataGridComponent(props: MyGridProps) {
             pageSize: 8,
           },
         },
-        sorting: {
-          sortModel: [{ field: 'id', sort: 'asc' }],
-        },
       }}
       getRowHeight={() => {
         return 60;
@@ -180,7 +159,11 @@ export default function DataGridComponent(props: MyGridProps) {
           display: 'flex',
           gap: 2,
           justifyContent: 'center',
+        },
+        '.MuiDataGrid-virtualScroller': {
+          minHeight: '200px'
         }
+
       }}
       disableColumnMenu
       pageSizeOptions={[8, 16, 24, 32]}

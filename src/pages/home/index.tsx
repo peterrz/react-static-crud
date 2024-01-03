@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import TopBar from './components/TopBar';
 import Box from '@mui/material/Box';
 import {
-  GridRowsProp,
   GridRowModesModel,
   GridRowModes,
   GridEventListener,
@@ -10,16 +9,21 @@ import {
   GridRowModel,
   GridRowEditStopReasons,
 } from '@mui/x-data-grid';
-import Api from '../../api/dataGrid.json';
 import DataGridComponent from './components/DataGridComponent';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { fetchData, deleteItem, updateItem, createItem, sortData } from '../../store/dataGridSlice';
 
-
-const initialRows: GridRowsProp = Api;
 
 
 export default function HomePage() {
-  const [rows, setRows] = React.useState(initialRows);
+  const dispatch = useAppDispatch();
+  const { data, index, loading } = useAppSelector((state) => state.data);
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
+
+  useEffect(() => {
+    // Fetch data when the component mounts
+    dispatch(fetchData());
+  }, [dispatch]);
 
   const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -31,12 +35,22 @@ export default function HomePage() {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
   };
 
+  const handleCreateClick = () => {
+    dispatch(createItem({ id: index, name: '', age: '', city: '' }))
+    setRowModesModel((oldModel) => ({
+      [index]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
+      ...oldModel,
+    }));
+  };
+
+
   const handleSaveClick = (id: GridRowId) => () => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+    dispatch(sortData('id'));
   };
 
   const handleDeleteClick = (id: GridRowId) => () => {
-    setRows(rows.filter((row) => row.id !== id));
+    dispatch(deleteItem(id));
   };
 
   const handleCancelClick = (id: GridRowId) => () => {
@@ -44,16 +58,11 @@ export default function HomePage() {
       ...rowModesModel,
       [id]: { mode: GridRowModes.View, ignoreModifications: true },
     });
-
-    const editedRow = rows.find((row) => row.id === id);
-    if (editedRow!.isNew) {
-      setRows(rows.filter((row) => row.id !== id));
-    }
   };
 
   const processRowUpdate = (newRow: GridRowModel) => {
     const updatedRow = { ...newRow, isNew: false };
-    setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+    dispatch(updateItem(newRow));
     return updatedRow;
   };
 
@@ -66,20 +75,20 @@ export default function HomePage() {
     <>
       <TopBar />
       <div className="flex items-center justify-center my-10">
-        <Box>
+        <Box data-testid="data-grid-component">
           <DataGridComponent
-            rows={rows}
+            rows={data}
             rowModesModel={rowModesModel}
             handleRowModesModelChange={handleRowModesModelChange}
             handleRowEditStop={handleRowEditStop}
             processRowUpdate={processRowUpdate}
-            setRows={setRows}
+            setRows={handleCreateClick}
             setRowModesModel={setRowModesModel}
             handleCancelClick={handleCancelClick}
             handleSaveClick={handleSaveClick}
             handleDeleteClick={handleDeleteClick}
             handleEditClick={handleEditClick}
-            loading={false}
+            loading={loading}
 
           />
         </Box>

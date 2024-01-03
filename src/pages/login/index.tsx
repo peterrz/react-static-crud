@@ -55,7 +55,7 @@ const LoginForm = () => {
           </Avatar>
         </div>
         <div>
-          <Typography variant="h5">Login</Typography>
+          <Typography variant="h5">Sign In page</Typography>
           <form>
             <TextField
               label="Username"

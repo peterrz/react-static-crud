@@ -20,7 +20,7 @@ const TopBar = () => {
           Home
         </Typography>
         {isAuthenticated && (
-          <Button color="inherit" onClick={handleLogout}>
+          <Button data-testid="exit-to-app-icon" color="inherit" onClick={handleLogout}>
             <ExitToAppIcon />
           </Button>
         )}

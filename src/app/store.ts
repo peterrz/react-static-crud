@@ -1,9 +1,11 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import authReducer from '../store/authSlice';
+import dataReducer from '../store/dataGridSlice';
 
 const store = configureStore({
   reducer: {
     auth: authReducer,
+    data: dataReducer,
   },
 });
 
