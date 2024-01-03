@@ -58,8 +58,9 @@ const dataSlice = createSlice({
       }
     },
     updateItem: (state, action) => {
+      console.log(action);
       const findIndex = state.data.findIndex(
-        item => item.id === action.payload
+        item => item.id === action.payload.id
       );
       if (findIndex !== -1) {
         state.data = state.data.map(item =>
@@ -76,6 +77,10 @@ const dataSlice = createSlice({
     createItem: (state, action) => {
       state.data = [action.payload, ...state.data];
       state.index += 1;
+      showNotification(
+        `A new Item Successfully Added to first of the Table`,
+        'success'
+      );
     },
     sortData: (state, action) => {
       const type = action.payload;

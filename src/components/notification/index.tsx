@@ -12,5 +12,5 @@ export const showNotification = (
 
   const { icon, backgroundColor, color } = defaultStyles[type] || defaultStyles.success;
 
-  toast(text, { icon, style: { backgroundColor, color, padding: '16px' } });
+  toast(text, { icon, style: { backgroundColor, color, padding: '16px', } });
 };

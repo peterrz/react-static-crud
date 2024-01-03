@@ -1,6 +1,8 @@
 # Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). it serves as a static CRUD application. It incorporates Material UI, Data Grid, and Tailwind for enhanced user interface components, while employing Redux Toolkit for efficient state management.
+
+It's important to mention that a JSON file in the API directory is utilized as a mock API for testing purposes. Additionally, for login credentials, the username and password are both set to "admin/admin."
 
 ## Available Scripts
 
@@ -11,6 +13,7 @@ In the project directory, you can run:
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
+for live demo tests use this like [http://deskhub.ir/](http://deskhub.ir/) (please noted this link temporary available)
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
