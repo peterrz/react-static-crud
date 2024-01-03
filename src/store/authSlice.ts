@@ -67,9 +67,7 @@ const authSlice = createSlice({
           state.isAuthenticated = true;
           showNotification('Login successful!', 'success');
           action.meta.arg.authLogin();
-          setTimeout(() => {
-            action.meta.arg.navigate('/home');
-          }, 500);
+
         } else {
           state.error = 'Invalid username or password';
           showNotification('Invalid username or password', 'warning');

@@ -16,7 +16,8 @@ function App() {
     if (!isAuthenticated) {
       return navigate("/login");
     }
-  }, [isAuthenticated, navigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated]);
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
